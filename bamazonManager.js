@@ -74,7 +74,9 @@ function productsList() {
     var query = "SELECT id,product_name,price,stock_quantity FROM products";
     connection.query(query, function(err, res) {
         if (err) throw err;
+        console.log();
         console.table(res);
+        connection.end();
     })
 }
 
@@ -148,16 +150,8 @@ function addNewProduct() {
         message: "What product would you like to add to the store?",  
         }
     ).then(function(answer){
-        var query = connection.query(
-            "INSERT INTO products",
-            [
-            {
-                stock_quantity: total
-            },
-            {
-                product_name: item.product_name
-            }
-            ],
+        var query = "INSERT INTO products (product_name, department, price, stock_quantity) VALUES (?, ?, ?, ?)";
+        connection.query(query,
         )
         
     })
