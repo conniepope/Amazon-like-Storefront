@@ -7,7 +7,7 @@ var inquirer = require("inquirer")
 
 var mysql = require("mysql");
 
-const cTable = require('console.table');
+// const cTable = require('console.table');
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -63,10 +63,9 @@ function listMenuOptions() {
             case "Exit":
                 connection.end();
                 break;
+
         }
-        
-    })
-        
+    })     
 }
 
 function productsList() {
@@ -85,59 +84,66 @@ function lowInventory() {
     var query = "SELECT id,product_name,price,stock_quantity FROM products WHERE stock_quantity < 5";
     connection.query(query, function(err, res) {
         if (err) throw err;
+        console.log();
         console.table(res);
+        connection.end();
     })
 }
 
 function addToInventory() {
+    var query = "SELECT product_name,price,stock_quantity FROM products";
+    connection.query(query, function(err, res) {
+        if (err) throw err;
    // display a prompt that will let the manager "add more" of any item currently in the store.
-   inquirer.prompt({
+        inquirer.prompt({
 
-    // product list in prompt
-            
-        name: "prducts",
-        type: "rawlist",
-        message: "Which item would you like to ADD MORE to the inventory?",
-        choices: function() {
-            var choiceArray = [];
-            for (var i = 0; i < res.length; i++) {
-                choiceArray.push(res[i].product_name);
-            }
-            return choiceArray;
-            },
-        }
-
-    ).then(function(answer) {
-
-        var query = "SELECT product_name,price,stock_quantity FROM products WHERE ?";
-        connection.query(query, {product_name: answer.products}, function(err, res) {
-            if (err) throw err;
-            var item = res[0];
-            //show item chosen, price, and quantity available of that item
-            console.log("You have chosen the " + item.product_name + ".");
-        
-            inquirer.prompt(
-                {
-                name: "units",
-                type: "number",
-                message: "How many would you like to add?",  
+        // product list in prompt
+                
+            name: "products",
+            type: "rawlist",
+            message: "Which item would you like to ADD MORE to the inventory?",
+            choices: function() {
+                var choiceArray = [];
+                for (var i = 0; i < res.length; i++) {
+                    choiceArray.push(res[i].product_name);
                 }
-            ).then(function(answer){
-                var total = (stock_quantity + answer.units);
-                var query = connection.query(
-                    "UPDATE products SET ? WHERE ?",
-                    [
+                return choiceArray;
+                },
+            }
+
+        ).then(function(answer) {
+
+            var query = "SELECT product_name,price,stock_quantity FROM products WHERE ?";
+            connection.query(query, {product_name: answer.products}, function(err, res) {
+                if (err) throw err;
+                var item = res[0];
+                console.log("You have chosen the " + item.product_name + ".");
+            
+                inquirer.prompt(
                     {
-                        stock_quantity: total
-                    },
-                    {
-                        product_name: item.product_name
+                    name: "units",
+                    type: "number",
+                    message: "How many would you like to add?",  
                     }
-                    ],
-                )
-                console.log("You now have " + total + item.product_name + " in stock.")
-            })
-        })   
+                ).then(function(answer){
+                    var total = (item.stock_quantity + answer.units);
+                    var query = connection.query(
+                        "UPDATE products SET ? WHERE ?",
+                        [
+                        {
+                            stock_quantity: total
+                        },
+                        {
+                            product_name: item.product_name
+                        }
+                        ],
+                    )
+                    console.log("You now have " + total + " " + item.product_name + " in stock.");
+                    connection.end();
+
+                })
+            })   
+        })
     })
 }
 
