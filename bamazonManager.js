@@ -75,7 +75,7 @@ function productsList() {
         if (err) throw err;
         console.log();
         console.table(res);
-        connection.end();
+        listMenuOptions();
     })
 }
 
@@ -86,7 +86,7 @@ function lowInventory() {
         if (err) throw err;
         console.log();
         console.table(res);
-        connection.end();
+        listMenuOptions();
     })
 }
 
@@ -139,7 +139,7 @@ function addToInventory() {
                         ],
                     )
                     console.log("You now have " + total + " " + item.product_name + " in stock.");
-                    connection.end();
+                    listMenuOptions();
 
                 })
             })   
@@ -148,17 +148,48 @@ function addToInventory() {
 }
 
 function addNewProduct() {
+    var query = "SELECT department FROM products";
+    connection.query(query, function(err, res) {
+        if (err) throw err;
     //add a completely new product to the store
-    inquirer.prompt(
-        {
-        name: "newProduct",
-        type: "input",
-        message: "What product would you like to add to the store?",  
-        }
-    ).then(function(answer){
-        var query = "INSERT INTO products (product_name, department, price, stock_quantity) VALUES (?, ?, ?, ?)";
-        connection.query(query,
-        )
-        
-    })
-} 
+        inquirer.prompt([
+            {
+                name: "newProduct",
+                type: "input",
+                message: "What product would you like to add to the store?",  
+            },
+            {
+                name: "setDepartment",
+                type: "input",
+                message: "Which department should this item go into?",
+            },
+            {
+                name: "price",
+                type: "number",
+                message: "How much should this item be listed for?"
+            },
+            {
+                name: "quantity",
+                type: "number",
+                message: "What is the starting stock quantity for this item?"
+            }
+
+
+        ]).then(function(answer){
+            var query = connection.query(
+                "INSERT INTO products SET ?",
+            {
+                product_name: answer.newProduct, 
+                department: answer.setDepartment, 
+                price: answer.price, 
+                stock_quantity: answer.quantity
+            },
+            function(err, res) {
+                if (err) throw err;
+                console.log("Your item has been added to inventory.")
+                listMenuOptions();
+
+            });
+        })
+    }) 
+}
