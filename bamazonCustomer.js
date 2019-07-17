@@ -121,6 +121,8 @@ function confirmation() {
         if (answer.confirm === true){
             console.log();
             console.log("Thank you for your purchase!")
+    //when a customer purchases anything from the store, the price of the product multiplied by the quantity purchased is added to the product's product_sales column. --------------------------------- IN PROGRESS
+
             more();
         } else {
             // go back to beginning?
