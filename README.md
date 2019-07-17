@@ -1,4 +1,4 @@
 # Amazon-like-Storefront
-Takes in orders and depletes stock from store's inventory.
+Represents an online store like Amazon. Has 3 different 
 
-Technologies used: MySQL, Inquirer npm package, Node.js, and Javascript.
+Technologies used: MySQL, Node.js, Javascript, and inquirer npm package.
