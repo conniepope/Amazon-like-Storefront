@@ -62,17 +62,21 @@ function listMenuOptions() {
     })     
 }
 
-function salesByDept() {
+function salesByDept() {  // ---------------THIS FUNCTION IS NOT WORKING YET.
     //display a summarized table
+    var query = "SELECT departments.department_id, departments.department_name, departments.over_head_costs, products.product_sales FROM products INNER JOIN departments ON products.department = departments.department_name";
+    //GROUP BY department_name;????
+    connection.query(query, function(err, res) {
+        if (err) throw err;
+        console.table(res)
     //The `total_profit` column should be calculated on the fly using the difference between `over_head_costs` and `product_sales`. `total_profit` should not be stored in any database. You should use a custom alias.
-
+    listMenuOptions()
+    })
 }
 
+
 function createNewDept() {
-    // var query = "SELECT * FROM products";
-    // connection.query(query, function(err, res) {
-    //     if (err) throw err;
-    //add a completely new product to the store
+
     inquirer.prompt([
         {
             name: "newDepart",
