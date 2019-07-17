@@ -7,6 +7,9 @@ var inquirer = require("inquirer")
 
 var mysql = require("mysql");
 
+// const cTable = require('console.table');
+
+
 var connection = mysql.createConnection({
     host: "localhost",
 
@@ -33,8 +36,6 @@ function listMenuOptions() {
     console.log("--------------------------------------")
 
     inquirer.prompt({
-
-    // menu list in prompt
             
         name: "menu",
         type: "list",
@@ -62,14 +63,18 @@ function listMenuOptions() {
     })     
 }
 
-function salesByDept() {  // ---------------THIS FUNCTION IS NOT WORKING YET.
+function salesByDept() {  
     //display a summarized table
-    var query = "SELECT departments.department_id, departments.department_name, departments.over_head_costs, products.product_sales FROM products INNER JOIN departments ON products.department = departments.department_name";
-    //GROUP BY department_name;????
+        // group & order by department id 
+
+    var query = "SELECT departProd.department_id, departProd.department_name, departProd.over_head_costs, SUM(departProd.product_sales) as product_sales, (SUM(departProd.product_sales) - departProd.over_head_costs) as total_profit FROM (SELECT departments.department_id, departments.department_name, departments.over_head_costs, IFNULL(products.product_sales, 0) as product_sales FROM products RIGHT JOIN departments ON products.department = departments.department_name) as departProd GROUP BY department_id ORDER BY department_id";
+    
+    
     connection.query(query, function(err, res) {
         if (err) throw err;
+        console.log();
         console.table(res)
-    //The `total_profit` column should be calculated on the fly using the difference between `over_head_costs` and `product_sales`. `total_profit` should not be stored in any database. You should use a custom alias.
+
     listMenuOptions()
     })
 }

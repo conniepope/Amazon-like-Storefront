@@ -33,8 +33,6 @@ function listMenuOptions() {
     console.log("--------------------------------------")
 
     inquirer.prompt({
-
-    // menu list in prompt
             
         name: "menu",
         type: "list",
@@ -96,7 +94,6 @@ function addToInventory() {
     var query = "SELECT product_name,price,stock_quantity FROM products";
     connection.query(query, function(err, res) {
         if (err) throw err;
-   // display a prompt that will let the manager "add more" of any item currently in the store.
         console.log();
 
         inquirer.prompt({
