@@ -81,6 +81,7 @@ function salesByDept() {
 
 
 function createNewDept() {
+    console.log();
 
     inquirer.prompt([
         {

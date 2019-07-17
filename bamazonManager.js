@@ -118,7 +118,10 @@ function addToInventory() {
             connection.query(query, {product_name: answer.products}, function(err, res) {
                 if (err) throw err;
                 var item = res[0];
+                console.log();
                 console.log("You have chosen the " + item.product_name + ".");
+                console.log();
+            
             
                 inquirer.prompt(
                     {
@@ -139,6 +142,7 @@ function addToInventory() {
                         }
                         ],
                     )
+                    console.log();
                     console.log("You now have " + total + " " + item.product_name + " in stock.");
                     listMenuOptions();
 
@@ -152,6 +156,7 @@ function addNewProduct() {
     var query = "SELECT * FROM products";
     connection.query(query, function(err, res) {
         if (err) throw err;
+        console.log();
     //add a completely new product to the store
         inquirer.prompt([
             {

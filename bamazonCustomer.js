@@ -121,6 +121,7 @@ function confirmation(total, item, answer) {
             more();
 
         } else {
+            console.log();
 
             inquirer.prompt(
                 {
@@ -129,10 +130,12 @@ function confirmation(total, item, answer) {
                     message: "No problem. Is there anything else you would like?"
                 }
             ).then(function(answer) {
+                console.log();
                 if (answer.anything_else === true) {
                     listProducts();
                 } else {
                     console.log("Have a great day! Come again!");
+                    console.log();
                     connection.end();
                 }
             })        
