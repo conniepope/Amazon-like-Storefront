@@ -30,6 +30,8 @@ connection.connect(function(err) {
 
 function listMenuOptions() {
 
+    console.log("--------------------------------------")
+
     inquirer.prompt({
 
     // menu list in prompt
@@ -95,6 +97,8 @@ function addToInventory() {
     connection.query(query, function(err, res) {
         if (err) throw err;
    // display a prompt that will let the manager "add more" of any item currently in the store.
+        console.log();
+
         inquirer.prompt({
 
         // product list in prompt
@@ -186,6 +190,7 @@ function addNewProduct() {
             },
             function(err, res) {
                 if (err) throw err;
+                console.log();
                 console.log("Your item has been added to inventory.")
                 listMenuOptions();
 

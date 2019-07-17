@@ -34,6 +34,7 @@ function listProducts() {
     connection.query(query, function(err, res) {
         if (err) throw err;
         // console.log(res);
+        console.log("--------------------------------------")
         inquirer.prompt(
 
     // list items available for purchase in prompt
@@ -56,6 +57,7 @@ function listProducts() {
             connection.query(query, {product_name: answer.products}, function(err, res) {
                 if (err) throw err;
                 var item = res[0];
+                console.log();
                 //show item chosen, price, and quantity available of that item
                 console.log("You have chosen the " + item.product_name + ".");
 
@@ -69,6 +71,7 @@ function listProducts() {
 
 function quantity(item) {
     // then prompt "How many wanted"
+    console.log();
    inquirer.prompt(
        {
        name: "units",
@@ -80,6 +83,7 @@ function quantity(item) {
        if (answer.units <= item.stock_quantity) {
            var total = answer.units * item.price
        // if ok then list total cost of purchase "The total cost of purchase of [quantity] [product] is $[total]. Is this OK? (Y/n)"
+           console.log();
            console.log("Your total for " + answer.units + " " + item.product_name + " is $" + total + ".")
            confirmation();
                // UPDATE DATABASE WITH NEW QUANTITY
@@ -115,13 +119,25 @@ function confirmation() {
 
     ).then(function(answer) {
         if (answer.confirm === true){
-            console.log("Thank you for your purchase.")
+            console.log();
+            console.log("Thank you for your purchase!")
             more();
         } else {
             // go back to beginning?
-            console.log("No problem. Is there anything else you would like?")
-            listProducts();
-        }
+            inquirer.prompt(
+                {
+                    name: "continue_confirm",
+                    type: "confirm",
+                    message: "No problem. Is there anything else you would like?"
+                }
+            ).then(function(answer) {
+                if (answer.continue_confirm === true) {
+                    listProducts();
+                } else {
+                    console.log("Have a great day! Come again!");
+                    connection.end();
+                }
+            })        }
     })
 }
 
@@ -139,6 +155,7 @@ function more() {
             listProducts();
         } else {
             console.log("Have a great day! Come again!");
+            console.log();
             connection.end();
         }
     })
