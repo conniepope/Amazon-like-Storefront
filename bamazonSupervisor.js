@@ -17,15 +17,87 @@ var connection = mysql.createConnection({
     database: "bamazon"
 })
 
+connection.connect(function(err) {
+    if (err) throw err;
+    // console.log("connected as id " + connection.threadId);
+    console.log("--------------------------------------")
+    listMenuOptions();
+});
+
 
 
 // PROMPTS/FUNCTIONS _____________________________________________________________
 
+function listMenuOptions() {
 
-// menu options:
-//   * View Product Sales by Department
-//   * Create New Department
+    console.log("--------------------------------------")
 
-//View Product Sales by Department:
-//display a summarized table
-//The `total_profit` column should be calculated on the fly using the difference between `over_head_costs` and `product_sales`. `total_profit` should not be stored in any database. You should use a custom alias.
+    inquirer.prompt({
+
+    // menu list in prompt
+            
+        name: "menu",
+        type: "list",
+        message: "Supervisor Menu Options",
+        choices: ["View Product Sales by Department", "Create New Department", "Exit"]
+
+    })
+
+    .then(function(answer) {
+
+        switch (answer.menu) {
+            case "View Product Sales by Department":
+                salesByDept();
+                break;
+        
+            case "Create New Department":
+                createNewDept();
+                break;
+        
+            case "Exit":
+                connection.end();
+                break;
+
+        }
+    })     
+}
+
+function salesByDept() {
+    //display a summarized table
+    //The `total_profit` column should be calculated on the fly using the difference between `over_head_costs` and `product_sales`. `total_profit` should not be stored in any database. You should use a custom alias.
+
+}
+
+function createNewDept() {
+    // var query = "SELECT * FROM products";
+    // connection.query(query, function(err, res) {
+    //     if (err) throw err;
+    //add a completely new product to the store
+    inquirer.prompt([
+        {
+            name: "newDepart",
+            type: "input",
+            message: "What department would you like to add?",  
+        },
+        {
+            name: "overHead",
+            type: "number",
+            message: "Overhead cost for this department?"
+        }
+    ]).then(function(answer){
+        var query = connection.query(
+            "INSERT INTO departments SET ?",
+            {
+                department_name: answer.newDepart,
+                over_head_costs: answer.overHead
+            },
+
+        function(err, res) {
+            if (err) throw err;
+            console.log();
+            console.log("The new department has been added.")    
+            listMenuOptions();
+
+        })
+    })
+}

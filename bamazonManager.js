@@ -152,7 +152,7 @@ function addToInventory() {
 }
 
 function addNewProduct() {
-    var query = "SELECT department FROM products";
+    var query = "SELECT * FROM products";
     connection.query(query, function(err, res) {
         if (err) throw err;
     //add a completely new product to the store
