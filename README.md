@@ -1,6 +1,8 @@
 # Amazon-like-Storefront
 This app represents an online store like Amazon. It has 3 different Node Apps: bamazonCustomer, bamazonManager, and bamazonSupervisor.
 
+https://conniepope.github.io/Amazon-like-Storefront/
+
 ## Customer Experience
 In the Customer Experience (bamazonCustomer), a list of products that are available for purchase is displayed.
 
